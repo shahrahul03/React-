@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
-import logo from "../src/img/logo.png";
+import logo from "../img/logo.png"; // Adjusted the path to logo
 import { FaBars, FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +32,6 @@ const Navbar = () => {
     }
   };
 
-  // Add or remove class to body element when menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("no-scroll");
@@ -46,18 +46,21 @@ const Navbar = () => {
         <img src={logo} alt="Logo" />
       </div>
       <nav className={`navbar__links ${isOpen ? "open" : ""}`}>
-        <a href="#home" onClick={closeMenu}>
+        <Link to="/login" onClick={closeMenu}>
+          Login
+        </Link>
+        <Link to="/home" onClick={closeMenu}>
           Home
-        </a>
-        <a href="#about" onClick={closeMenu}>
+        </Link>
+        <Link to="/about" onClick={closeMenu}>
           About
-        </a>
-        <a href="#products" onClick={closeMenu}>
+        </Link>
+        <Link to="/products" onClick={closeMenu}>
           Products
-        </a>
-        <a href="#contact" onClick={closeMenu}>
+        </Link>
+        <Link to="/contact" onClick={closeMenu}>
           Contact
-        </a>
+        </Link>
       </nav>
       <button className="navbar__toggle" onClick={toggleMenu}>
         {isOpen ? <FaTimes /> : <FaBars />}

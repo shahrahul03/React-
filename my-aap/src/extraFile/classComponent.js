@@ -46,7 +46,7 @@ class Timer extends Component {
       <div className="timer-div">
         {" "}
         {/* Container div with a class name for styling */}
-        <h1>Timer: {this.state.timer}</h1>{" "}
+        <h1 className="text-red-400">Timer: {this.state.timer}</h1>{" "}
         {/* Display the current timer value */}
         <button onClick={this.startTimer}>Start Timer</button>{" "}
         {/* Button to start the timer */}
