@@ -88,14 +88,14 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gradient-to-r from-red-400 to-purple-300">
+    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gradient-to-r from-red-200 to-purple-200">
       <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-        <img src={logo} alt="Logo" className="hidden md:block max-h-full max-w-full object-contain" />
+        <img src={logo} alt="Logo" className="hidden md:block max-h-full max-w-full object-contain rounded-3xl" />
       </div>
-      <div className="w-full md:w-1/2 p-8 flex justify-center">
+      <div className="w-full md:w-1/2 p-8 flex justify-center ">
         <div className="w-full max-w-sm">
           {activeForm === 'login' && (
-            <form onSubmit={handleLogin} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <form onSubmit={handleLogin} className="bg-white shadow-md rounded-2xl px-8 pt-6 pb-8 mb-4 bg-gradient-to-r from-purple-300 to-red-300">
               <h2 className="text-2xl font-semibold mb-4 text-gray-800">Login</h2>
               <div className="mb-4">
                 <label htmlFor="email" className="block mb-1 text-gray-700">Email</label>
@@ -123,9 +123,9 @@ const Login = () => {
                 />
                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
               </div>
-              <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Login</button>
+              <button type="submit" className="w-1/2 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-900 transition duration-200">Login</button>
               <p className="text-center mt-4 text-sm text-gray-600">
-                <span className="cursor-pointer text-blue-600" onClick={() => switchToForm('register')}>Register</span> | <span className="cursor-pointer text-blue-600" onClick={() => switchToForm('forgot-password')}>Forgot Password?</span>
+                <span className="cursor-pointer text-blue-700" onClick={() => switchToForm('register')}>Register</span> | <span className="cursor-pointer text-blue-600" onClick={() => switchToForm('forgot-password')}>Forgot Password?</span>
               </p>
               <GoogleLogin
                 clientId="your-client-id-from-google-developer-console"
@@ -138,7 +138,7 @@ const Login = () => {
             </form>
           )}
           {activeForm === 'register' && (
-            <form onSubmit={handleRegister} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <form onSubmit={handleRegister} className="bg-white shadow-md rounded-2xl px-8 pt-6 pb-8 mb-4 bg-gradient-to-r from-purple-300 to-red-300">
               <h2 className="text-2xl font-semibold mb-4 text-gray-800">Register</h2>
               <div className="mb-4">
                 <label htmlFor="registerName" className="block mb-1 text-gray-700">Name</label>
@@ -205,14 +205,14 @@ const Login = () => {
                 />
                 {errors.registerContactNumber && <p className="text-red-500 text-sm mt-1">{errors.registerContactNumber}</p>}
               </div>
-              <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Register</button>
-              <p className="text-center mt-4 text-sm text-gray-600">
-                <span className="cursor-pointer text-blue-600" onClick={() => switchToForm('login')}>Back to Login</span>
+              <button type="submit" className="w-1/2 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-900 transition duration-200">Register</button>
+              <p className="text-center mt-4 text-lg text-gray-600">
+                <span className="cursor-pointer text-blue-900" onClick={() => switchToForm('login')}>Back to Login</span>
               </p>
             </form>
           )}
           {activeForm === 'forgot-password' && (
-            <form onSubmit={handleForgotPassword} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <form onSubmit={handleForgotPassword} className="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4 bg-gradient-to-r from-purple-300 to-red-300">
               <h2 className="text-2xl font-semibold mb-4 text-gray-800">Forgot Password</h2>
               <div className="mb-4">
                 <label htmlFor="forgotPasswordEmail" className="block mb-1 text-gray-700">Email</label>
@@ -227,8 +227,8 @@ const Login = () => {
                 />
                 {errors.forgotPasswordEmail && <p className="text-red-500 text-sm mt-1">{errors.forgotPasswordEmail}</p>}
               </div>
-              <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Send Reset Email</button>
-              <p className="text-center mt-4 text-sm text-gray-600">
+              <button type="submit" className="w-1/2 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-900 transition duration-200">Send</button>
+              <p className="text-center mt-4 text-lg text-gray-600">
                 <span className="cursor-pointer text-blue-600" onClick={() => switchToForm('login')}>Back to Login</span>
               </p>
             </form>
