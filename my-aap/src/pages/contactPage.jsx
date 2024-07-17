@@ -1,9 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaMapMarkerAlt, FaEnvelope, FaPhone } from 'react-icons/fa';
 
 function Contact() {
+  const [formValues, setFormValues] = useState({ name: "", email: "", phone: "", message: "" });
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const validate = () => {
+    let tempErrors = {};
+    if (!formValues.name) tempErrors.name = "Name is required";
+    if (!formValues.email) {
+      tempErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formValues.email)) {
+      tempErrors.email = "Email is invalid";
+    }
+    if (!formValues.phone) tempErrors.phone = "Phone is required";
+    if (!formValues.message) tempErrors.message = "Message is required";
+
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      console.log("Form submitted successfully");
+      alert("Form submitted successfully");
+      setFormValues({ name: "", email: "", phone: "", message: "" });
+    }
+  };
+
   const handleFormReset = () => {
-    document.getElementById('contactForm').reset();
+    setFormValues({ name: "", email: "", phone: "", message: "" });
+    setErrors({});
   };
 
   return (
@@ -56,42 +89,54 @@ function Contact() {
       {/* Contact Form */}
       <div className="contact-form p-8 bg-gray-50 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold mb-6 text-center">Contact Us Now</h2>
-        <form id="contactForm" className="max-w-lg mx-auto space-y-6">
+        <form onSubmit={handleSubmit} id="contactForm" className="max-w-lg mx-auto space-y-6">
           <div>
             <label className="block mb-2 text-lg font-semibold">Name</label>
             <input
+              onChange={handleChange}
+              value={formValues.name}
               type="text"
               name="name"
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               required
             />
+            {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
           </div>
           <div>
             <label className="block mb-2 text-lg font-semibold">Email</label>
             <input
               type="email"
               name="email"
+              value={formValues.email}
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               required
             />
+            {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
           </div>
           <div>
             <label className="block mb-2 text-lg font-semibold">Phone</label>
             <input
               type="tel"
               name="phone"
+              onChange={handleChange}
+              value={formValues.phone}
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               required
             />
+            {errors.phone && <span className="text-red-500 text-sm">{errors.phone}</span>}
           </div>
           <div>
             <label className="block mb-2 text-lg font-semibold">Message</label>
             <textarea
               name="message"
+              onChange={handleChange}
+              value={formValues.message}
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               rows="4"
               required
             ></textarea>
+            {errors.message && <span className="text-red-500 text-sm">{errors.message}</span>}
           </div>
           <div className="flex justify-between">
             <button
