@@ -7,6 +7,7 @@ import Home from "./pages/homePage";
 import Contact from "./pages/contactPage";
 import About from "./pages/aboutPage";
 import Login from "../src/loginComponent/loginComponent";
+import FooterComponent from "../src/FooterComponent/footerComponent";
 
 // function Home() {
 //   return (

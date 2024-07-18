@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GoogleLogin } from 'react-google-login';
-import logo from "../img/logo.png"
+import logo from "../img/logo.png";
 import { validateLoginForm, validateRegistrationForm, validateForgotPasswordForm } from './validation';
 
 const Login = () => {
@@ -212,7 +212,7 @@ const Login = () => {
             </form>
           )}
           {activeForm === 'forgot-password' && (
-            <form onSubmit={handleForgotPassword} className="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4 bg-gradient-to-r from-purple-300 to-red-300">
+            <form onSubmit={handleForgotPassword} className="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4 mt-0 bg-gradient-to-r from-purple-300 to-red-300">
               <h2 className="text-2xl font-semibold mb-4 text-gray-800">Forgot Password</h2>
               <div className="mb-4">
                 <label htmlFor="forgotPasswordEmail" className="block mb-1 text-gray-700">Email</label>

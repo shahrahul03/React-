@@ -1,12 +1,21 @@
 import React from "react";
+import FooterComponent from "../FooterComponent/footerComponent"
 
 function About() {
   return (
-    <body id="about">
+    <>
+    
+    <section id="about">
       <h2>About</h2>
       <p>This is the about section.</p>
       
-    </body>
+    </section>
+
+    <footer className="footer">
+          <FooterComponent />
+        </footer>
+        
+    </>
   );
 }
 export default About;
