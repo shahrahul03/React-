@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+// import { UserContext } from '../userContext/userContext';
+import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 import logo from "../img/logo.png";
 import { validateLoginForm, validateRegistrationForm, validateForgotPasswordForm } from './validation';
+import Home from "../pages/homePage"
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +17,11 @@ const Login = () => {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [errors, setErrors] = useState({});
   const [activeForm, setActiveForm] = useState('login');
+  const navigate = useNavigate();
+
+  // const [loginEmail, setLoginEmail] = useState('');
+  // const [loginPassword, setLoginPassword] = useState('');
+  // const [errors, setErrors] = useState({});
 
   const switchToForm = (formName) => {
     setActiveForm(formName);
@@ -27,7 +35,32 @@ const Login = () => {
       setErrors(validationErrors);
       return;
     }
-    console.log('Logging in with:', email, password);
+  
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+  
+      const data = await response.json();
+      if (response.status === 200) {
+        console.log('User logged in successfully:', data.message);
+        // Perform any actions after successful login, like redirecting to another page or setting user state
+        navigate('navigate');
+      } else {
+        console.error('Error logging in user:', data.message);
+        setErrors({ loginEmail: data.message });
+      }
+    } catch (error) {
+      console.error('Server error:', error);
+      setErrors({ loginEmail: 'Server error' });
+    }
   };
 
   const handleRegister = async (e) => {
@@ -39,7 +72,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/register', {
+      const response = await fetch('http://localhost:5000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
