@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
-import logo from "../img/logo.png"; // Adjusted the path to logo
+import logo from "../img/logo.png"; // Adjust the path to your logo
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -10,7 +10,11 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      const mobileView = window.innerWidth <= 768;
+      if (!mobileView && isOpen) {
+        setIsOpen(false); // Close the menu when switching to laptop view
+      }
+      setIsMobile(mobileView);
     };
 
     window.addEventListener("resize", handleResize);
@@ -18,7 +22,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [isOpen]);
 
   const toggleMenu = () => {
     if (isMobile) {

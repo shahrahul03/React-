@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import logo from '../img/logo.png';
 import { validateLoginForm, validateRegistrationForm } from './validation';
 import { useNavigate } from 'react-router-dom';
+import Popup from '../loginComponent/popupComponent';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,8 +12,10 @@ const Login = () => {
   const [registerName, setRegisterName] = useState('');
   const [registerAddress, setRegisterAddress] = useState('');
   const [registerContactNumber, setRegisterContactNumber] = useState('');
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [errors, setErrors] = useState({});
   const [activeForm, setActiveForm] = useState('login');
+  const [popupMessage, setPopupMessage] = useState('');
   const navigate = useNavigate();
 
   const switchToForm = (formName) => {
@@ -39,16 +42,18 @@ const Login = () => {
 
       const data = await response.json();
       if (response.status === 200) {
-        console.log('User logged in successfully:', data);
-        // Redirect or perform any other actions on successful login
-        navigate('/home');
+        setPopupMessage('User logged in successfully');
+        setTimeout(() => {
+          setPopupMessage('');
+          navigate('/home');
+        }, 3000);
       } else {
         console.error('Error logging in:', data.message);
         setErrors({ email: data.message });
       }
     } catch (error) {
       console.error('Server error:', error);
-      setErrors({ email: 'Server error' });
+      setErrors({ email: ' Server error' });
     }
   };
 
@@ -83,16 +88,31 @@ const Login = () => {
 
       const data = await response.json();
       if (response.status === 201) {
-        console.log('User registered successfully:', data);
-        switchToForm('login');
+        setPopupMessage('User registered successfully');
+        setTimeout(() => {
+          setPopupMessage('');
+          switchToForm('login');
+        }, 3000);
       } else {
         console.error('Error registering user:', data.message);
         setErrors({ registerEmail: data.message });
       }
     } catch (error) {
-      console.error('Server error:', error); // Log the detailed error
-      setErrors({ registerEmail: 'Server error' });
+      console.error('Server error:', error);
+      setErrors({ registerEmail: ' Server error' });
     }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    // Implement your forgot password logic here
+    console.log('Forgot password for:', forgotPasswordEmail);
+    // Example: Display a success message
+    setPopupMessage('Password reset link sent to your email');
+    setTimeout(() => {
+      setPopupMessage('');
+      switchToForm('login');
+    }, 3000);
   };
 
   return (
@@ -319,8 +339,35 @@ const Login = () => {
               </p>
             </form>
           )}
+          {activeForm === 'forgot-password' && (
+            <form onSubmit={handleForgotPassword} className="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4 mt-0 bg-gradient-to-r from-purple-300 to-red-300">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Forgot Password</h2>
+              <div className="mb-4">
+                <label htmlFor="forgotPasswordEmail" className="block mb-1 text-gray-700">Email</label>
+                <input
+                  type="email"
+                  id="forgotPasswordEmail"
+                  value={forgotPasswordEmail}
+                  onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                  className={`w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.forgotPasswordEmail ? 'border-red-500' : ''
+                  }`}
+                  placeholder="Enter your email"
+                  required
+                />
+                {errors.forgotPasswordEmail && <p className="text-red-500 text-sm mt-1">{errors.forgotPasswordEmail}</p>}
+              </div>
+              <button type="submit" className="w-1/2 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-900 transition duration-200">Send</button>
+              <p className="text-center mt-4 text-lg text-gray-600">
+                <span className="cursor-pointer text-blue-600" onClick={() => switchToForm('login')}>Back to Login</span>
+              </p>
+            </form>
+          )}
         </div>
       </div>
+      {popupMessage && (
+        <Popup message={popupMessage} onClose={() => setPopupMessage('')} />
+      )}
     </div>
   );
 };
