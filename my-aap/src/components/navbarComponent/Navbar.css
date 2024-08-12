@@ -1,0 +1,132 @@
+/* Base styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: red;
+  padding: 10px 20px;
+  border-radius: 5px;
+  position: fixed; /* Fix navbar at the top */
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure navbar stays on top */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+}
+
+.navbar__logo img {
+  width: 80px;
+  height: 50px;
+}
+
+.navbar__links {
+  display: flex;
+  list-style: none;
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+.navbar__links a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0 15px;
+  display: block;
+}
+.navbar__links button{
+  color: #fff;
+  text-decoration: none;
+  padding: 0 15px;
+  display: block;
+}
+
+.navbar__toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .navbar__links {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    background-color: black;
+    padding-top: 60px;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%);
+  }
+
+  .navbar__links.open {
+    display: flex;
+    transform: translateX(0);
+  }
+
+  .navbar__toggle {
+    display: block;
+    z-index: 10;
+  }
+
+  .navbar__links a {
+    padding: 15px;
+    border-top: 1px solid #444;
+    text-align: center;
+  }
+}
+
+/* Prevent body from scrolling when menu is open */
+.no-scroll {
+  overflow: hidden;
+}
+
+/* Main content styling */
+.content {
+  padding-top: 70px; /* Adjust this value based on your navbar height */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+}
+
+.timer-div{
+  display: flex;
+  background-color: rgb(125, 233, 233);
+  height: 150px;
+  width: 300px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px;
+  border: 5px  white ;
+  border-radius: 5px;
+  border-style: double;
+  padding-right: 11px;
+  flex-direction: row;
+  
+}
+#home{
+  /* width: 100%; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  
+}
+button{
+  background-color: rgb(213, 213, 244) ;
+  padding: 3px 3px 3px 3px;
+  border-radius: 7px;
+  
+}
