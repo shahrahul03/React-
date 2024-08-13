@@ -44,6 +44,7 @@ body {
   text-decoration: none;
   padding: 0 15px;
   display: block;
+  
 }
 
 .navbar__toggle {
@@ -83,6 +84,11 @@ body {
   }
 
   .navbar__links a {
+    padding: 15px;
+    border-top: 1px solid #444;
+    text-align: center;
+  }
+  .navbar__links button  {
     padding: 15px;
     border-top: 1px solid #444;
     text-align: center;

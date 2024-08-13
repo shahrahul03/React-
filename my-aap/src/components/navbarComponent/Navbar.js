@@ -52,13 +52,6 @@ const Navbar = () => {
         <img src={logo} alt="Logo" />
       </div>
       <nav className={`navbar__links ${isOpen ? "open" : ""}`}>
-        {authState.isAuthenticated ? (
-          <button onClick={() => dispatch(logout())}>Log out</button>
-        ) : (
-          <Link to="/login" onClick={closeMenu}>
-            Login
-          </Link>
-        )}
         <Link to="/home" onClick={closeMenu}>
           Home
         </Link>
@@ -100,6 +93,13 @@ const Navbar = () => {
         <Link to="/contact" onClick={closeMenu}>
           Contact
         </Link>
+        {authState.isAuthenticated ? (
+          <button onClick={() => dispatch(logout())}>Log out</button>
+        ) : (
+          <Link to="/login" onClick={closeMenu}>
+            Login
+          </Link>
+        )}
       </nav>
       <button className="navbar__toggle" onClick={toggleMenu}>
         {isOpen ? <FaTimes /> : <FaBars />}

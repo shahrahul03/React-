@@ -24,51 +24,6 @@ const Login = () => {
     setActiveForm(formName);
     setErrors({});
   };
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const validationErrors = validateLoginForm(email, password);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-  
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-  
-      const data = await response.json();
-      if (response.ok) {
-        const { token, user } = data; // Ensure response contains token
-  
-        dispatch(login({ token, role: user.role }));
-  
-        localStorage.setItem('authToken', token); // Store token
-        localStorage.setItem('user', JSON.stringify(user)); // Store user data
-  
-          navigate('/home');
-        
-  
-        setPopupMessage('User logged in successfully');
-      } else {
-        console.error('Error logging in:', data.message);
-        setErrors({ email: data.message });
-      }
-    } catch (error) {
-      console.error('Server error:', error);
-      setErrors({ email: 'Server error' });
-    } finally {
-      setTimeout(() => {
-        setPopupMessage('');
-      }, 3000);
-    }
-  };
-  
-  
   // const handleLogin = async (e) => {
   //   e.preventDefault();
   //   const validationErrors = validateLoginForm(email, password);
@@ -87,24 +42,18 @@ const Login = () => {
   //     });
   
   //     const data = await response.json();
-  //     if (response.status === 200) {
-  //       const { token, user, role } = data; // Ensure response contains token
+  //     if (response.ok) {
+  //       const { token, user } = data; // Ensure response contains token
   
   //       dispatch(login({ token, role: user.role }));
   
   //       localStorage.setItem('authToken', token); // Store token
   //       localStorage.setItem('user', JSON.stringify(user)); // Store user data
   
-  //       if (role === 'admin') {
-  //         // navigate('/admin-contact');
-  //       } else {
   //         navigate('/home');
-  //       }
+        
   
   //       setPopupMessage('User logged in successfully');
-  //       setTimeout(() => {
-  //         setPopupMessage('');
-  //       }, 3000);
   //     } else {
   //       console.error('Error logging in:', data.message);
   //       setErrors({ email: data.message });
@@ -112,8 +61,63 @@ const Login = () => {
   //   } catch (error) {
   //     console.error('Server error:', error);
   //     setErrors({ email: 'Server error' });
+  //   } finally {
+  //     setTimeout(() => {
+  //       setPopupMessage('');
+  //     }, 3000);
   //   }
   // };
+  
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    
+    const validationErrors = validateLoginForm(email, password);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+  
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        const { token, user } = data;
+  
+        dispatch(login({ token, role: user.role }));
+  
+        localStorage.setItem('authToken', token);
+        localStorage.setItem("user", user.role);
+        // localStorage.setItem('user', JSON.stringify(user.role));
+  
+        navigate('/home');
+  
+        setPopupMessage('User logged in successfully');
+      } else if (response.status === 401 || response.status === 400) {
+        // Handle invalid email or password
+        setErrors({ email: 'Invalid email or password' });
+      } else {
+        // Handle other types of errors
+        console.error('Error logging in:', data.message);
+        setErrors({ email: data.message });
+      }
+    } catch (error) {
+      console.error('Server error:', error);
+      setErrors({ email: 'Server error' });
+    } finally {
+      setTimeout(() => {
+        setPopupMessage('');
+      }, 3000);
+    }
+  };
+  
   
 
   const handleRegister = async (e) => {
