@@ -25,7 +25,7 @@ const UserProfile = () => {
             'Authorization': ` ${token}`,
           },
         });
-        console.log(response);
+        
         setProfile(response.data.profile);
         setBio(response.data.profile.bio || '');
       } catch (err) {
@@ -60,7 +60,7 @@ const UserProfile = () => {
       setProfileImage(null);
       setIsEditing(false);
     } catch (err) {
-      console.error('Error details:', err);
+     
       setError(err.response?.data?.msg || 'Error updating profile');
       setSuccess('');
     }

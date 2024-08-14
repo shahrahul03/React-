@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../CartContext/cartContext';
+import { Dialog } from '@headlessui/react';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const { addToCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +26,9 @@ const Shop = () => {
           name: cat.name
         })));
       } catch (error) {
-        console.error('Error fetching data:', error);
+        setError(error.response?.data?.msg || 'Error fetching data');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -45,25 +49,54 @@ const Shop = () => {
     setCategory(e.target.value);
   };
 
-  const handleAddToCart = (product) => {
-    addToCart(product);
-    navigate('/cart'); // Redirect to cart after adding item
+  const addToCart = async (product) => {
+    try {
+      const authToken = localStorage.getItem("authToken");
+      await axios.post(
+        'http://localhost:5000/api/cart',
+        { productId: product._id, quantity: 1 },
+        { headers: { Authorization: ` ${authToken}` } }
+      );
+      navigate('/cart');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   };
 
+  const handleAddToCart = (product) => {
+    addToCart(product);
+  };
+
+  const openImageModal = (image) => {
+    setSelectedImage(image);
+  };
+
+  const closeImageModal = () => {
+    setSelectedImage(null);
+  };
+
+  if (loading) {
+    return <div className="text-center text-xl mt-10">Loading products...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-xl mt-10 text-red-500">{error}</div>;
+  }
+
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-6">Shop</h1>
+    <div className="max-w-screen-xl mx-auto px-4 py-8 bg-gray-100">
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Shop Our Products</h1>
       
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
         <input
           type="text"
           placeholder="Search products..."
-          className="border p-2 rounded-md w-full max-w-md"
+          className="border p-3 rounded-lg w-full max-w-md shadow-sm focus:ring focus:ring-gray-300"
           value={searchTerm}
           onChange={handleSearchChange}
         />
         <select
-          className="border p-2 rounded-md ml-4"
+          className="border p-3 rounded-lg w-full md:w-auto shadow-sm focus:ring focus:ring-gray-300"
           value={category}
           onChange={handleCategoryChange}
         >
@@ -76,29 +109,61 @@ const Shop = () => {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.length === 0 ? (
-          <p className="col-span-full text-center">No products found.</p>
+          <p className="col-span-full text-center text-lg text-gray-600">No products found.</p>
         ) : (
           filteredProducts.map(product => (
-            <div key={product._id} className="bg-white p-4 shadow-md rounded-md">
-              <img
-                src={product.productImage || 'https://via.placeholder.com/150'}
-                alt={product.name}
-                className="w-full h-48 object-cover mb-4"
-              />
-              <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
-              <p className="mb-2">${product.price.toFixed(2)}</p>
+            <div 
+              key={product._id} 
+              className="bg-white p-6 shadow-lg rounded-lg hover:shadow-2xl transition-shadow duration-300 relative"
+            >
+              <div className="w-full h-64 overflow-hidden rounded-lg mb-4 cursor-pointer">
+                <img
+                  src={product.productImage}
+                  alt={product.name}
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                  onClick={() => openImageModal(product.productImage)}
+                />
+              </div>
+              <h2 className="text-xl font-semibold mb-2 text-gray-800">{product.name}</h2>
+              <p className="text-xl font-bold text-gray-900 mb-4">${product.price.toFixed(2)}</p>
               <button
-                className="bg-black text-white p-2 rounded-md w-full"
+                className="bg-gray-800 text-white p-3 rounded-lg w-full hover:bg-gray-700 transition-colors duration-300"
                 onClick={() => handleAddToCart(product)}
               >
                 Add to Cart
               </button>
+              <div className="absolute top-2 right-2 bg-yellow-500 text-xs font-bold text-white px-2 py-1 rounded-lg">
+                New
+              </div>
             </div>
           ))
         )}
       </div>
+
+      {/* Full-Screen Image Modal */}
+      <Dialog
+        open={!!selectedImage}
+        onClose={closeImageModal}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+      >
+        {selectedImage && (
+          <Dialog.Panel className="relative">
+            <img
+              src={selectedImage}
+              alt="Product"
+              className="max-w-full max-h-full rounded-lg"
+            />
+            <button
+              onClick={closeImageModal}
+              className="absolute top-4 right-4 text-white text-xl focus:outline-none"
+            >
+              &times;
+            </button>
+          </Dialog.Panel>
+        )}
+      </Dialog>
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useCart } from '../CartContext/cartContext';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toast
 
 const Checkout = () => {
-  const { cartItems = [] } = useCart(); // Default to empty array
-
+  const [cartItems, setCartItems] = useState([]);
   const [billingDetails, setBillingDetails] = useState({
     country: '',
     firstName: '',
@@ -17,21 +18,55 @@ const Checkout = () => {
     email: '',
     orderNotes: ''
   });
-
   const [paymentMethod, setPaymentMethod] = useState('Paypal');
   const [subtotal, setSubtotal] = useState(0);
-  const [orderPlaced, setOrderPlaced] = useState(false); // State for success message
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const total = cartItems.reduce((acc, item) => {
-      if (item.product && item.product.price) {
-        return acc + item.product.price * item.quantity;
+    const fetchCartItems = async () => {
+      try {
+        const authToken = localStorage.getItem("authToken");
+        console.log('Auth Token:', authToken); // Debug token value
+        
+        if (!authToken) {
+          throw new Error('No auth token found');
+        }
+
+        const response = await axios.get('http://localhost:5000/api/cart/all', {
+          headers: { Authorization: ` ${authToken}` } // Corrected Authorization header
+        });
+
+        console.log('API Response:', response.data); // Debug API response
+
+        const fetchedCartItems = response.data.items || []; // Access items correctly
+
+        if (!Array.isArray(fetchedCartItems)) {
+          throw new Error('Cart items data is not an array.');
+        }
+
+        setCartItems(fetchedCartItems);
+
+        // Calculate subtotal
+        const total = fetchedCartItems.reduce((acc, item) => {
+          if (item.product && item.product.price) {
+            return acc + item.product.price * item.quantity;
+          }
+          console.error('Invalid item or missing product price:', item); // More detailed logging
+          return acc;
+        }, 0);
+        setSubtotal(total);
+
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+        setError(error.response?.data?.msg || error.message || 'Error fetching cart items');
+      } finally {
+        setLoading(false);
       }
-      console.error('Invalid item:', item); // Log invalid items
-      return acc;
-    }, 0);
-    setSubtotal(total);
-  }, [cartItems]);
+    };
+
+    fetchCartItems();
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -51,7 +86,7 @@ const Checkout = () => {
     const orderDetails = {
       ...billingDetails,
       cartItems: cartItems.map((item) => ({
-        productId: item._id,
+        productId: item.product._id,
         name: item.product.name,
         quantity: item.quantity,
         price: item.product.price,
@@ -65,7 +100,7 @@ const Checkout = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': ` ${localStorage.getItem("authToken")}` // Include authorization header
+          'Authorization': ` ${localStorage.getItem("authToken")}` // Corrected Authorization header
         },
         body: JSON.stringify(orderDetails),
       });
@@ -73,15 +108,23 @@ const Checkout = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setOrderPlaced(true); // Show success message
+        toast.success('Order placed successfully!'); // Display success toast
         // Optionally, clear the cart or redirect the user
       } else {
-        alert('Failed to place order: ' + data.message);
+        toast.error('Failed to place order: ' + data.message); // Display error toast
       }
     } catch (error) {
-      alert('An error occurred: ' + error.message);
+      toast.error('An error occurred: ' + error.message); // Display error toast
     }
   };
+
+  if (loading) {
+    return <div className="text-center text-xl mt-10">Loading cart items...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-xl mt-10 text-red-500">{error}</div>;
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-50">
@@ -238,26 +281,14 @@ const Checkout = () => {
             <label htmlFor="cheque-payment">Cheque Payment</label>
           </div>
           <div className="flex items-center mb-4">
-            <input type="radio" id="paypal" name="payment-method" value="Paypal" className="mr-2" onChange={handlePaymentMethodChange} defaultChecked />
+            <input type="radio" id="paypal" name="payment-method" value="Paypal" className="mr-2" onChange={handlePaymentMethodChange} checked />
             <label htmlFor="paypal">Paypal</label>
           </div>
         </div>
       </div>
 
-      {/* Success Pop-up */}
-      {orderPlaced && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Order Placed Successfully!</h2>
-            <button
-              onClick={() => setOrderPlaced(false)}
-              className="bg-black text-white p-3 rounded-lg"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Toast Notifications */}
+      <ToastContainer />
     </div>
   );
 };

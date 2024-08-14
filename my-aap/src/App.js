@@ -15,101 +15,98 @@ import Shop from "./components/Shop/ShopComponent";
 import ProductDetails from "./components/ProductsDetails/ProductsDetailsComponent";
 import Cart from "./components/CartComponent/Cart";
 import Checkout from "./components/checkOutComponent/checkOutComponent";
-import { CartProvider } from "./components/CartContext/cartContext";
 import AllProduct from "./components/AllOrder/AllOrder";
 import ProtectedRoute from "./ProtectedRoutes/protectedRoute";
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <div className="App">
-          <Navbar />
-          <main className="content">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route
-                path="/products"
-                element={
-                  <ProtectedRoute role="admin">
-                    <Products />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route
-                path="/category"
-                element={
-                  <ProtectedRoute role="admin">
-                    <CategoryComponent />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <ProfileComponent />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/addProduct"
-                element={
-                  <ProtectedRoute role="admin">
-                    <AddProductComponent />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/adminContact"
-                element={
-                  <ProtectedRoute role="admin">
-                    <AdminContactPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/shop"
-                element={
-                  <ProtectedRoute>
-                    <Shop />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/details/:id" element={<ProductDetails />} />
-              <Route
-                path="/cart"
-                element={
-                  <ProtectedRoute>
-                    <Cart />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/checkout"
-                element={
-                  <ProtectedRoute>
-                    {" "}
-                    <Checkout />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/orders"
-                element={
-                  <ProtectedRoute role="admin">
-                    <AllProduct />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </main>
-        </div>
-      </Router>
-    </CartProvider>
+    <Router>
+      <div className="App">
+        <Navbar />
+        <main className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route
+              path="/products"
+              element={
+                <ProtectedRoute role="admin">
+                  <Products />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/category"
+              element={
+                <ProtectedRoute role="admin">
+                  <CategoryComponent />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfileComponent />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/addProduct"
+              element={
+                <ProtectedRoute role="admin">
+                  <AddProductComponent />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/adminContact"
+              element={
+                <ProtectedRoute role="admin">
+                  <AdminContactPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/shop"
+              element={
+                <ProtectedRoute>
+                  <Shop />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/details/:id" element={<ProductDetails />} />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute>
+                  {" "}
+                  <Checkout />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute role="admin">
+                  <AllProduct />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
