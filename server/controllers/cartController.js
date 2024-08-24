@@ -1,69 +1,9 @@
-// const Cart = require("../models/Cart");
-
-// // Add to Cart
-// const addToCart = async (req, res) => {
-//   try {
-//     // console.log("User from auth middleware:", req.user); // Add this line
-//     const userId = req.user._id; // Use _id, assuming req.user is a Mongoose document
-//     const { productId, quantity } = req.body;
-
-//     if (!productId || !quantity) {
-//       return res
-//         .status(400)
-//         .json({ error: "Product and quantity are required" });
-//     }
-
-//     let cart = await Cart.findOne({ user: userId });
-
-//     if (cart) {
-//       const itemIndex = cart.items.findIndex(
-//         (item) => item.product.toString() === productId
-//       );
-
-//       if (itemIndex > -1) {
-//         cart.items[itemIndex].quantity += quantity;
-//       } else {
-//         cart.items.push({ product: productId, quantity });
-//       }
-//     } else {
-//       cart = new Cart({
-//         user: userId,
-//         items: [{ product: productId, quantity }],
-//       });
-//     }
-
-//     await cart.save();
-//     res.status(200).json({ message: "Cart updated successfully" });
-//   } catch (error) {
-//     console.error("Error adding to cart:", error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };
-
-// // Get Cart
-// const getCart = async (req, res) => {
-//   const userId = req.user._id; // Assuming user ID comes from authenticated user
-//   try {
-//     const cart = await Cart.findOne({ user: userId }).populate("items.product");
-
-//     if (!cart) {
-//       return res.status(404).json({ message: "Cart not found" });
-//     }
-
-//     res.status(200).json(cart);
-//   } catch (error) {
-//     console.error("Error retrieving cart:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-
-// module.exports = { getCart, addToCart };
-
 const Cart = require("../models/Cart");
 
 // Add to Cart
 const addToCart = async (req, res) => {
   try {
+    // console.log("User from auth middleware:", req.user); // Add this line
     const userId = req.user.id; // Use _id, assuming req.user is a Mongoose document
     const { productId, quantity } = req.body;
 
@@ -116,6 +56,64 @@ const getCart = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+module.exports = { getCart, addToCart };
+
+// Add to Cart
+// const addToCart = async (req, res) => {
+//   try {
+//     // Use _id,  req.user is a Mongoose document
+//     const { productId, quantity } = req.body;
+
+//     if (!productId || !quantity) {
+//       return res
+//         .status(400)
+//         .json({ error: "Product and quantity are required" });
+//     }
+
+//     let cart = await Cart.findOne({ user: userId });
+
+//     if (cart) {
+//       const itemIndex = cart.items.findIndex(
+//         (item) => item.product.toString() === productId
+//       );
+
+//       if (itemIndex > -1) {
+//         cart.items[itemIndex].quantity += quantity;
+//       } else {
+//         cart.items.push({ product: productId, quantity });
+//       }
+//     } else {
+//       cart = new Cart({
+//         user: userId,
+//         items: [{ product: productId, quantity }],
+//       });
+//     }
+
+//     await cart.save();
+//     res.status(200).json({ message: "Cart updated successfully" });
+//   } catch (error) {
+//     console.error("Error adding to cart:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
+
+// // Get Cart
+// const getCart = async (req, res) => {
+//   const userId = req.user.id; // Assuming user ID comes from authenticated user
+//   try {
+//     const cart = await Cart.findOne({ user: userId }).populate("items.product");
+
+//     if (!cart) {
+//       return res.status(404).json({ message: "Cart not found" });
+//     }
+
+//     res.status(200).json(cart);
+//   } catch (error) {
+//     console.error("Error retrieving cart:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 
 // Update Cart Item
 const updateCartItem = async (req, res) => {
